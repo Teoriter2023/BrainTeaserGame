@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening Game</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .fadeIn {
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .shine {
+            animation: shine 0.5s ease-in-out infinite alternate;
+        }
+
+        #gameTitle, #developer {
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 id="gameTitle" class="fadeIn"></h1>
+    <p id="developer" style="display: none;" class="fadeIn"></p>
+
+    <script>
+        // Fungsi untuk menampilkan opening game
+        function showOpening() {
+            document.body.style.backgroundColor = 'black';
+
+            const gameTitle = document.getElementById('gameTitle');
+            const developerInfo = document.getElementById('developer');
+
+            // Tampilkan judul game dengan animasi fade
+            gameTitle.textContent = 'KUIS DADAKAN';
+            gameTitle.classList.add('fadeIn');
+
+            // Tunggu 2 detik sebelum memulai animasi shine huruf satu persatu
+            setTimeout(() => {
+                shineLetters(gameTitle);
+                // Tunggu 4 detik sebelum menampilkan nama pengembang dengan animasi fade
+                setTimeout(() => {
+                    developerInfo.style.display = 'block';
+                    developerInfo.textContent = 'By Fadhil Pratama';
+                    developerInfo.classList.add('fadeIn');
+                    shineLetters(developerInfo);
+                }, 4000);
+            }, 2000);
+
+            // Tunggu 8 detik sebelum mengarahkan ke halaman game sesungguhnya (index1.html)
+            setTimeout(() => {
+                window.location.href = 'index1.html';
+            }, 8000);
+        }
+
+        // Fungsi untuk menerapkan animasi shine huruf satu persatu
+        function shineLetters(element) {
+            const text = element.textContent;
+            element.innerHTML = ''; // Kosongkan elemen
+
+            // Tambahkan setiap huruf dengan animasi shine
+            for (let i = 0; i < text.length; i++) {
+                const letter = document.createElement('span');
+                letter.textContent = text[i];
+                letter.classList.add('shine');
+                element.appendChild(letter);
+            }
+        }
+
+        // Panggil fungsi showOpening saat halaman dimuat
+        window.onload = showOpening;
+    </script>
+</body>
+</html>

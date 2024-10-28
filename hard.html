@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kuis</title>
+  <style>
+    body {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background: url('https://source.unsplash.com/1920x1080/?nature') no-repeat center center fixed;
+  background-size: cover;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#quiz-container {
+  width: 90%;
+  max-width: 400px;
+  margin: auto;
+  border: 2px solid #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+#question-image {
+  max-width: 100%;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.option {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 8px;
+  cursor: pointer;
+  background-color: #2ecc71;
+  color: #dfdada;
+  border: 2px solid #27ae60;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.option:hover {
+  background-color: #27ae60;
+}
+
+#custom-result,
+#wrong-answers {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #e74c3c;
+  display: none;
+}
+
+#custom-result {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.custom-button {
+  background-color: #e74c3c;
+  color: #fff;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px;
+  transition: background-color 0.3s ease-in-out;
+  display: none;
+}
+
+.custom-button:last-child {
+  background-color: #3498db;
+  margin-top: 10px;
+}
+
+#quiz-container:hover {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.option {
+  animation: fadeInUp 0.5s ease-in-out;
+}
+
+@media only screen and (max-width: 680px) {
+  #quiz-container {
+    width: 70%;
+    max-width: none;
+  }
+}
+
+
+  </style>
+  <title>Quiz Game</title>
+</head>
+
+<body>
+
+    <div id="quiz-container">
+        <audio id="correct-sound" src="3-Checklist-3.mp3"></audio>
+        <audio id="wrong-sound" src="wrong-answer-126515.mp3"></audio>
+        <img id="question-image" src="https://via.placeholder.com/300" alt="Question Image">
+        <div id="question"></div>
+        <div id="options"></div>
+        <div id="custom-result"></div>
+        <div id="wrong-answers"></div>
+        <button class="custom-button" onclick="retryQuiz()">Ulangi</button>
+        <button class="custom-button" onclick="backToIndex()">Kembali</button>
+      </div>
+
+  <script>
+     const quizData = [
+  {
+    question: "Apa nama kimia dari gas yang ditemukan di atmosfer bumi dengan rumus N2O?",
+    options: ["Nitrogen Dioksida", "Ozon", "Nitrous Oxide", "Amonia"],
+    correctAnswer: "Nitrous Oxide",
+    questionImage: "foto/OIP (8).jpg",
+  },
+  {
+    question: "Siapakah penulis buku 'Das Kapital' yang menjadi dasar pemikiran Marxisme?",
+    options: ["Karl Marx", "Friedrich Engels", "Vladimir Lenin", "Leon Trotsky"],
+    correctAnswer: "Karl Marx",
+    questionImage: "foto/OIP (5).jpg",
+  },
+  {
+    question: "Berapa hasil dari integral ∫(2x + 3) dx?",
+    options: ["x^2 + 3x", "x^2 + 3", "x^2 + 3/2", "(2/3)x^3 + 3x^2 + C"],
+    correctAnswer: "(2/3)x^3 + 3x^2 + C",
+    questionImage: "foto/OIP (5).jpg",
+  },
+  {
+    question: "Apa nama ilmuwan yang menemukan struktur periodik unsur?",
+    options: ["Dmitri Mendeleev", "Marie Curie", "Ernest Rutherford", "Niels Bohr"],
+    correctAnswer: "Dmitri Mendeleev",
+    questionImage: "foto/85187_foto-29-ilmuwan-dunia.jpg",
+  },
+  {
+    question: "Siapakah tokoh sejarah yang terkenal dengan 'Hannibal Crosses the Alps'?",
+    options: ["Alexander the Great", "Julius Caesar", "Hannibal Barca", "Napoleon Bonaparte"],
+    correctAnswer: "Hannibal Barca",
+    questionImage: "foto/OIP (9).jpg",
+  },
+  {
+    question: "Apa nama senyawa kimia dari garam dapur?",
+    options: ["Sodium Chloride", "Potassium Nitrate", "Calcium Carbonate", "Magnesium Sulfate"],
+    correctAnswer: "Sodium Chloride",
+    questionImage: "foto/download (4).jpg",
+  },
+  {
+    question: "Siapakah presiden Amerika Serikat ke-16 yang dijuluki sebagai 'Bapak Fisika Nuklir'?",
+    options: ["John F. Kennedy", "Lyndon B. Johnson", "Richard Nixon", "Harry S. Truman"],
+    correctAnswer: "Harry S. Truman",
+    questionImage: "foto/OIP.jpg",
+  },
+  {
+    question: "Apa nama tokoh sejarah Indonesia yang menjadi pahlawan nasional dan pernah menjabat sebagai wakil presiden?",
+    options: ["Mohammad Hatta", "Ki Hadjar Dewantara", "Sultan Agung", "Cut Nyak Dien"],
+    correctAnswer: "Mohammad Hatta",
+    questionImage: "foto/Tujuh-presiden-Republik-Indonesia-Foto-Pemimpin.IDbec979546e42c773.jpg",
+  },
+  {
+    question: "Berapakah nilai sin(60°) + cos(30°)?",
+    options: ["√3/2", "1/2", "3/2", "1"],
+    correctAnswer: "√3/2",
+    questionImage: "foto/917804.jpg",
+  },
+  {
+    question: "Siapakah penulis novel 'One Hundred Years of Solitude'?",
+    options: ["Gabriel Garcia Marquez", "Isabel Allende", "Julio Cortazar", "Pablo Neruda"],
+    correctAnswer: "Gabriel Garcia Marquez",
+    questionImage: "foto/OIP (5).jpg",
+  },
+  {
+    question: "Apa nama tokoh sejarah yang terkenal dengan 'Magna Carta'?",
+    options: ["King John", "King Henry VIII", "Queen Elizabeth I", "King Richard the Lionheart"],
+    correctAnswer: "King John",
+    questionImage: "foto/download (5).jpg",
+  },
+  {
+    question: "Siapakah penulis naskah Proklamasi Kemerdekaan Indonesia?",
+    options: ["Soekarno", "Mohammad Hatta", "Ki Hadjar Dewantara", "Bung Tomo"],
+    correctAnswer: "Soekarno",
+    questionImage: "foto/Tujuh-presiden-Republik-Indonesia-Foto-Pemimpin.IDbec979546e42c773.jpg",
+  },
+  {
+    question: "What is the capital city of France?",
+    options: ["Madrid", "Berlin", "Paris", "Rome"],
+    correctAnswer: "Paris",
+    questionImage: "foto/download (6).jpg",
+  },
+  {
+    question: "Berapakah hasil dari 12 × 5 - (8 ÷ 2)?",
+    options: ["34", "38", "42", "46"],
+    correctAnswer: "38",
+    questionImage: "foto/917804.jpg",
+  },
+  {
+    question: "Apa nama senyawa kimia untuk air?",
+    options: ["H2O", "CO2", "O2", "CH4"],
+    correctAnswer: "H2O",
+    questionImage: "foto/download (7).jpg",
+  },
+];
+
+
+
+
+  let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const questionElement = document.getElementById('question');
+      const optionsElement = document.getElementById('options');
+      const questionImageElement = document.getElementById('question-image');
+
+      questionElement.textContent = quizData[currentQuestion].question;
+      questionImageElement.src = quizData[currentQuestion].questionImage;
+      optionsElement.innerHTML = '';
+
+      quizData[currentQuestion].options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        optionElement.textContent = option;
+        optionElement.onclick = () => checkAnswer(index);
+        optionsElement.appendChild(optionElement);
+      });
+    }
+
+    function playCorrectSound() {
+      const correctSound = document.getElementById('correct-sound');
+      correctSound.play();
+    }
+
+    function playWrongSound() {
+      const wrongSound = document.getElementById('wrong-sound');
+      wrongSound.play();
+    }
+
+    function checkAnswer(optionIndex) {
+      const correctAnswerIndex = quizData[currentQuestion].options.indexOf(quizData[currentQuestion].correctAnswer);
+      if (optionIndex === correctAnswerIndex) {
+        score++;
+        playCorrectSound();
+      } else {
+        playWrongSound();
+      }
+
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const resultElement = document.getElementById('custom-result');
+      const retryButton = document.getElementsByClassName('custom-button')[0];
+      const backToIndexButton = document.getElementsByClassName('custom-button')[1];
+      const wrongAnswersElement = document.getElementById('wrong-answers');
+
+      const maxScore = Math.floor(quizData.length * 6.7);
+      const totalScore = Math.floor(score * 6.7);
+
+      if (score === quizData.length) {
+        resultElement.textContent = `Anda sangat pintar! Skor Anda: ${totalScore} dari ${maxScore}. Semua jawaban benar.`;
+      } else if (totalScore >= maxScore / 2) {
+        resultElement.textContent = `TOLOL, sok-sokan main mode hard! Skor lu: ${totalScore} dari ${maxScore}. Anda memiliki beberapa jawaban yang salah.`;
+      } else {
+        resultElement.textContent = `Dasar TOLOL, sok pintar banget luwh main mode hard, easy aja masih payah. Skor lu: ${totalScore} dari ${maxScore}. Balajar lagi tol.`;
+      }
+
+      const wrongAnswers = [];
+      quizData.forEach((question, index) => {
+        const userAnswer = document.querySelector('.option.selected')?.textContent;
+        if (userAnswer !== question.options[quizData[index].options.indexOf(question.correctAnswer)]) {
+          wrongAnswers.push(index + 1);
+        }
+      });
+
+     
+
+      resultElement.style.display = 'block';
+      retryButton.style.display = 'block';
+      backToIndexButton.style.display = 'block';
+      wrongAnswersElement.style.display = 'block';
+      document.getElementById('question').style.display = 'none';
+      document.getElementById('options').style.display = 'none';
+    }
+
+    function retryQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      loadQuestion();
+      document.getElementById('custom-result').style.display = 'none';
+      document.getElementsByClassName('custom-button')[0].style.display = 'none';
+      document.getElementsByClassName('custom-button')[1].style.display = 'none';
+      document.getElementById('wrong-answers').style.display = 'none';
+      document.getElementById('question').style.display = 'block';
+      document.getElementById('options').style.display = 'block';
+    }
+
+    function backToIndex() {
+      window.location.href = 'index1.html';
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+
+</html>
+
+</html>
